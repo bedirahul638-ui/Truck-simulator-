@@ -68,484 +68,311 @@ button.active,button:active{background:#247fc0}
     <p>Drive your upgraded cargo truck on an Indian-style highway.</p>
     <p>Hold GAS to accelerate. Use the arrows to steer and BRAKE to slow down.</p>
     <button id="play">START DRIVING</button>
-    <div class="small">3D Truck • Mobile Edition</div>
+    <div class="small">3D Truck • Realistic Edition</div>
   </div>
 </div>
 
 <script type="module">
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 
 const root = document.getElementById('game');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x91c9ed);
-scene.fog = new THREE.Fog(0x91c9ed, 85, 240);
+scene.background = new THREE.Color(0x87ceeb);
+scene.fog = new THREE.FogExp2(0x87ceeb, 0.0035);
 
-const camera = new THREE.PerspectiveCamera(
-  62, innerWidth / innerHeight, 0.1, 400
-);
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
 
 const renderer = new THREE.WebGLRenderer({
-  antialias:true, powerPreference:'high-performance'
+  antialias: true,
+  powerPreference: 'high-performance'
 });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.shadowMap.enabled = false;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 root.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xe4f4ff, 0x536341, 2.1));
+// Lighting Setup for Realism
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+scene.add(ambientLight);
 
-const sunlight = new THREE.DirectionalLight(0xffffff, 2.1);
-sunlight.position.set(-15, 28, 12);
+const sunlight = new THREE.DirectionalLight(0xfffaf0, 1.8);
+sunlight.position.set(30, 50, 20);
+sunlight.castShadow = true;
+sunlight.shadow.mapSize.width = 2048;
+sunlight.shadow.mapSize.height = 2048;
+sunlight.shadow.camera.near = 0.5;
+sunlight.shadow.camera.far = 150;
+const d = 25;
+sunlight.shadow.camera.left = -d;
+sunlight.shadow.camera.right = d;
+sunlight.shadow.camera.top = d;
+sunlight.shadow.camera.bottom = -d;
 scene.add(sunlight);
 
-function material(color, roughness=0.8, metalness=0){
-  return new THREE.MeshStandardMaterial({
-    color, roughness, metalness
-  });
+function material(color, roughness=0.7, metalness=0.1){
+  return new THREE.MeshStandardMaterial({ color, roughness, metalness });
 }
 
-const blue = material(0x0876bd, 0.36, 0.2);
-const blueDark = material(0x07568c, 0.42, 0.2);
-const rubber = material(0x202327);
-const chrome = material(0xc4d0d8, 0.25, 0.8);
-const black = material(0x101820);
-const glass = material(0x173747, 0.2, 0.15);
-const white = material(0xf4f2e8);
-const amber = material(0xffa42a, 0.35);
-const red = material(0xe82e23, 0.35);
-const darkGrey = material(0x303942);
-const cargoMat = material(0xb6c4cd);
-const green = material(0x63944c);
-const roadMat = material(0x353a40);
-const roadLine = material(0xf5f0db);
-const treeTrunk = material(0x67462c);
-const treeLeaves = material(0x34733a);
+const blue = material(0x0968ac, 0.3, 0.3);
+const blueDark = material(0x053c64, 0.4, 0.2);
+const rubber = material(0x1a1a1a, 0.9, 0.1);
+const chrome = material(0xddeeff, 0.1, 0.9);
+const black = material(0x111111, 0.8, 0.2);
+const glass = material(0x112233, 0.1, 0.9);
+const white = material(0xfafafa, 0.5, 0.1);
+const amber = material(0xff9900, 0.3, 0.2);
+const red = material(0xcc1111, 0.3, 0.2);
+const darkGrey = material(0x2b333b, 0.6, 0.2);
+const cargoMat = material(0xc5d1d9, 0.5, 0.1);
+const green = material(0x4c8c44, 0.9, 0.0);
+const roadMat = material(0x22262a, 0.9, 0.1);
+const roadLine = material(0xf2ebd9, 0.8, 0.0);
+const treeTrunk = material(0x5c4033, 0.9, 0.0);
+const treeLeaves = material(0x2e6630, 0.8, 0.0);
 
-function box(parent,w,h,d,mat,x,y,z){
-  const m = new THREE.Mesh(
-    new THREE.BoxGeometry(w,h,d),mat
-  );
-  m.position.set(x,y,z);
+function box(parent, w, h, d, mat, x, y, z, castShadow=true){
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x, y, z);
+  m.castShadow = castShadow;
+  m.receiveShadow = true;
   parent.add(m);
   return m;
 }
 
-function cylinder(parent,r1,r2,h,mat,x,y,z,segments=16){
-  const m = new THREE.Mesh(
-    new THREE.CylinderGeometry(r1,r2,h,segments),mat
-  );
-  m.position.set(x,y,z);
+function cylinder(parent, r1, r2, h, mat, x, y, z, segments=16){
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, segments), mat);
+  m.position.set(x, y, z);
+  m.castShadow = true;
+  m.receiveShadow = true;
   parent.add(m);
   return m;
 }
 
-// World and highway
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(650,500),green
-);
-ground.rotation.x = -Math.PI/2;
-ground.position.set(0,-0.12,-140);
+// World Ground and Highway
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), green);
+ground.rotation.x = -Math.PI / 2;
+ground.position.set(0, -0.1, -200);
+ground.receiveShadow = true;
 scene.add(ground);
 
-box(scene,12,0.12,360,roadMat,0,-0.025,-155);
+box(scene, 12, 0.15, 500, roadMat, 0, -0.02, -200, false);
 
-for(const x of [-5.55,5.55]){
-  box(scene,0.15,0.025,360,roadLine,x,0.05,-155);
+for(const x of [-5.6, 5.6]){
+  box(scene, 0.18, 0.03, 500, roadLine, x, 0.03, -200, false);
 }
 
-const dashes=[];
-for(let z=-340;z<20;z+=9){
-  dashes.push(box(scene,0.12,0.025,4,roadLine,0,0.05,z));
+const dashes = [];
+for(let z = -400; z < 20; z += 10){
+  dashes.push(box(scene, 0.15, 0.03, 4, roadLine, 0, 0.03, z, false));
 }
 
-// Truck chassis
+// Truck Assembly
 const truck = new THREE.Group();
 scene.add(truck);
 
-box(truck,2.05,0.38,6.0,darkGrey,0,0.75,-0.15);
-box(truck,1.8,0.14,5.5,black,0,0.49,-0.15);
+box(truck, 2.1, 0.4, 6.2, darkGrey, 0, 0.75, -0.1);
+box(truck, 1.85, 0.15, 5.8, black, 0, 0.5, -0.1);
 
-// Rear cargo body with side rails
+// Rear Trailer Cargo
 const trailer = new THREE.Group();
 truck.add(trailer);
 
-box(trailer,2.38,2.0,4.15,cargoMat,0,1.85,-1.15);
-box(trailer,2.43,0.12,4.3,darkGrey,0,0.75,-1.15);
+box(trailer, 2.4, 2.1, 4.2, cargoMat, 0, 1.9, -1.2);
+box(trailer, 2.45, 0.12, 4.4, darkGrey, 0, 0.8, -1.2);
 
-// Cargo panel divisions
-for(let z of [-2.65,-1.65,-0.65,0.35]){
-  box(trailer,2.405,1.9,0.035,material(0x9daeb9),
-      0,1.85,z);
+for(let z of [-2.7, -1.7, -0.7, 0.3]){
+  box(trailer, 2.42, 2.0, 0.04, material(0xaebbc4), 0, 1.9, z);
 }
 
-// Upper and lower cargo rails
-for(let y of [0.88,2.82]){
-  box(trailer,2.48,0.08,4.35,chrome,0,y,-1.15);
+for(let y of [0.9, 2.9]){
+  box(trailer, 2.5, 0.08, 4.45, chrome, 0, y, -1.2);
 }
 
-// Rear door frame
-box(trailer,2.3,1.95,0.08,chrome,0,1.85,-3.30);
-box(trailer,1.02,1.7,0.09,cargoMat,-0.55,1.85,-3.36);
-box(trailer,1.02,1.7,0.09,cargoMat,0.55,1.85,-3.36);
-box(trailer,0.045,1.78,0.06,darkGrey,0,1.85,-3.43);
-
-// Cargo side reflector strips
-for(const side of [-1,1]){
-  for(let z of [-2.65,-1.5,-0.35]){
-    box(trailer,0.055,0.12,0.42,amber,
-        side*1.225,1.0,z);
-  }
-}
-
-// Detailed blue cabin
+// Cabin
 const cabin = new THREE.Group();
 truck.add(cabin);
 
-// Main cabin and hood
-box(cabin,2.12,1.52,1.72,blue,0,1.56,1.15);
-box(cabin,1.95,0.42,0.72,blue,0,0.98,2.0);
+box(cabin, 2.15, 1.55, 1.75, blue, 0, 1.6, 1.1);
+box(cabin, 1.98, 0.45, 0.75, blue, 0, 1.0, 2.0);
+box(cabin, 2.2, 0.15, 1.8, blueDark, 0, 2.45, 1.1);
+box(cabin, 1.8, 0.75, 0.05, glass, 0, 2.0, 2.05);
 
-// Cabin roof
-box(cabin,2.16,0.16,1.76,blueDark,0,2.38,1.12);
-
-// Front windscreen
-box(cabin,1.76,0.73,0.045,glass,0,1.99,2.02);
-
-// Windscreen outer border
-for(const x of [-0.93,0.93]){
-  box(cabin,0.09,0.84,0.08,chrome,x,1.99,2.03);
-}
-box(cabin,1.93,0.09,0.08,blueDark,0,2.42,2.03);
-box(cabin,1.93,0.09,0.08,blueDark,0,1.56,2.03);
-
-// Windscreen centre divider
-box(cabin,0.055,0.74,0.07,chrome,0,1.99,2.06);
-
-// Side windows and door panels
-for(const side of [-1,1]){
-  // Side window
-  box(cabin,0.045,0.61,0.75,glass,
-      side*1.075,2.02,1.10);
-
-  // Door seam
-  box(cabin,0.025,0.83,0.025,blueDark,
-      side*1.075,1.47,0.77);
-
-  // Door handle
-  box(cabin,0.045,0.055,0.23,chrome,
-      side*1.105,1.57,0.65);
-
-  // Side step
-  box(cabin,0.34,0.09,0.56,chrome,
-      side*1.04,0.72,1.16);
-
-  box(cabin,0.32,0.12,0.52,black,
-      side*1.04,0.63,1.16);
-
-  // Fuel tank
-  cylinder(cabin,0.23,0.23,0.7,chrome,
-      side*0.84,0.64,-0.25,16).rotation.z=Math.PI/2;
-
-  // Side mirrors: mounting arm and mirror
-  const arm=box(cabin,0.055,0.055,0.50,black,
-      side*1.20,1.94,1.85);
-  arm.rotation.y=side*0.15;
-
-  box(cabin,0.13,0.33,0.16,black,
-      side*1.39,1.98,1.72);
-
-  box(cabin,0.045,0.25,0.11,chrome,
-      side*1.47,1.98,1.72);
-
-  // Cabin grab handle
-  box(cabin,0.04,0.29,0.045,chrome,
-      side*1.09,1.46,1.45);
+for(const side of [-1, 1]){
+  box(cabin, 0.05, 0.6, 0.75, glass, side * 1.09, 2.0, 1.1);
+  box(cabin, 0.35, 0.1, 0.55, chrome, side * 1.05, 0.7, 1.15);
+  cylinder(cabin, 0.22, 0.22, 0.7, chrome, side * 0.85, 0.65, -0.2, 16).rotation.z = Math.PI/2;
 }
 
-// Front grille and chrome bars
-box(cabin,1.18,0.52,0.075,darkGrey,0,1.12,2.39);
-box(cabin,1.05,0.43,0.06,black,0,1.12,2.44);
+box(cabin, 1.2, 0.55, 0.08, darkGrey, 0, 1.1, 2.4);
+box(cabin, 2.25, 0.25, 0.3, chrome, 0, 0.7, 2.45);
 
-for(let y=0.94;y<=1.29;y+=0.085){
-  box(cabin,1.02,0.025,0.035,chrome,0,y,2.48);
-}
+// Wheels Setup
+const wheels = [];
+const frontWheels = [];
 
-// Front logo badge
-box(cabin,0.24,0.17,0.06,chrome,0,1.48,2.40);
-box(cabin,0.10,0.075,0.07,blueDark,0,1.48,2.45);
-
-// Front bumper
-box(cabin,2.22,0.23,0.27,chrome,0,0.69,2.44);
-box(cabin,2.12,0.11,0.14,darkGrey,0,0.53,2.42);
-
-// Headlights and indicators
-for(const side of [-1,1]){
-  box(cabin,0.38,0.32,0.09,black,side*0.77,0.97,2.40);
-  box(cabin,0.27,0.19,0.055,white,side*0.77,1.01,2.46);
-  box(cabin,0.27,0.065,0.06,amber,side*0.77,0.88,2.46);
-
-  // Fog lamps
-  box(cabin,0.19,0.10,0.07,white,side*0.89,0.65,2.57);
-}
-
-// Front number plate
-box(cabin,0.64,0.16,0.035,white,0,0.72,2.59);
-box(cabin,0.53,0.035,0.02,black,0,0.72,2.615);
-
-// Exhaust pipe behind the cabin
-cylinder(truck,0.09,0.12,1.4,black,-0.82,1.55,-0.35,12);
-cylinder(truck,0.10,0.10,0.12,chrome,-0.82,2.27,-0.35,12);
-
-// Rear mudflaps
-for(const side of [-1,1]){
-  box(truck,0.32,0.60,0.08,black,side*1.05,0.62,-2.75);
-}
-
-// Rear lamps
-for(const side of [-1,1]){
-  box(trailer,0.19,0.32,0.09,red,side*1.04,0.93,-3.44);
-  box(trailer,0.12,0.10,0.05,amber,side*1.04,0.70,-3.45);
-}
-
-// Wheels with detailed rims and hub bolts
-const wheels=[];
-const frontWheels=[];
-
-function addWheel(x,z,isFront=false){
-  const wheel=new THREE.Group();
-  wheel.position.set(x,0.49,z);
+function addWheel(x, z, isFront=false){
+  const wheel = new THREE.Group();
+  wheel.position.set(x, 0.5, z);
   truck.add(wheel);
 
-  const tire=new THREE.Mesh(
-    new THREE.CylinderGeometry(0.43,0.43,0.28,20),
-    rubber
-  );
-  tire.rotation.z=Math.PI/2;
+  const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 24), rubber);
+  tire.rotation.z = Math.PI / 2;
+  tire.castShadow = true;
   wheel.add(tire);
 
-  const outerRim=new THREE.Mesh(
-    new THREE.CylinderGeometry(0.285,0.285,0.30,16),
-    chrome
-  );
-  outerRim.rotation.z=Math.PI/2;
-  wheel.add(outerRim);
-
-  const innerRim=new THREE.Mesh(
-    new THREE.CylinderGeometry(0.20,0.20,0.315,12),
-    darkGrey
-  );
-  innerRim.rotation.z=Math.PI/2;
-  wheel.add(innerRim);
-
-  const hub=new THREE.Mesh(
-    new THREE.CylinderGeometry(0.105,0.105,0.33,12),
-    chrome
-  );
-  hub.rotation.z=Math.PI/2;
-  wheel.add(hub);
-
-  for(let i=0;i<8;i++){
-    const a=i*Math.PI/4;
-    const bolt=cylinder(
-      wheel,0.025,0.025,0.025,white,
-      x<0?-0.17:0.17,
-      Math.cos(a)*0.22,
-      Math.sin(a)*0.22,8
-    );
-    bolt.rotation.z=Math.PI/2;
-  }
+  const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.32, 16), chrome);
+  rim.rotation.z = Math.PI / 2;
+  wheel.add(rim);
 
   wheels.push(wheel);
-  if(isFront)frontWheels.push(wheel);
+  if(isFront) frontWheels.push(wheel);
 }
 
-// Front axle
-for(const side of [-1,1]){
-  addWheel(side*1.12,1.58,true);
+for(const side of [-1, 1]){
+  addWheel(side * 1.15, 1.6, true);
+  addWheel(side * 1.15, -0.9, false);
+  addWheel(side * 1.15, -2.4, false);
 }
 
-// Two rear axles
-for(const side of [-1,1]){
-  addWheel(side*1.12,-0.90,false);
-  addWheel(side*1.12,-2.35,false);
-}
+// Scenery (Trees and Buildings)
+const scenery = [];
 
-// Front wheel arch covers
-for(const side of [-1,1]){
-  const arch=box(cabin,0.10,0.84,1.18,blueDark,
-      side*1.12,0.87,1.57);
-  arch.position.y=0.89;
-}
-
-// Roadside scenery
-const scenery=[];
-
-function addTree(x,z){
-  const group=new THREE.Group();
-  group.position.set(x,0,z);
+function addTree(x, z){
+  const group = new THREE.Group();
+  group.position.set(x, 0, z);
   scene.add(group);
-
-  cylinder(group,0.13,0.20,1.35,treeTrunk,0,0.68,0,8);
-
-  const leaves=new THREE.Mesh(
-    new THREE.ConeGeometry(0.85,2.2,7),treeLeaves
-  );
-  leaves.position.y=2.2;
+  cylinder(group, 0.15, 0.22, 1.4, treeTrunk, 0, 0.7, 0, 8);
+  const leaves = new THREE.Mesh(new THREE.ConeGeometry(0.9, 2.5, 7), treeLeaves);
+  leaves.position.y = 2.4;
+  leaves.castShadow = true;
   group.add(leaves);
   scenery.push(group);
 }
 
-const buildingMat=material(0xc6ac89);
-function addBuilding(x,z){
-  const h=2+Math.random()*2.5;
-  const group=new THREE.Group();
-  group.position.set(x,0,z);
+function addBuilding(x, z){
+  const h = 3 + Math.random() * 3;
+  const group = new THREE.Group();
+  group.position.set(x, 0, z);
   scene.add(group);
-
-  box(group,3,h,3,buildingMat,0,h/2,0);
-  box(group,3.05,0.18,3.05,material(0x9a5540),0,h,0);
-
-  for(let y=1;y<h;y+=1.1){
-    box(group,0.5,0.55,0.05,glass,-0.65,y,1.53);
-    box(group,0.5,0.55,0.05,glass,0.65,y,1.53);
-  }
+  box(group, 3.5, h, 3.5, material(0xc8b29c), 0, h/2, 0);
   scenery.push(group);
 }
 
-for(let z=-260;z<15;z+=13){
-  addTree(-9-Math.random()*7,z);
-  addTree(9+Math.random()*7,z-5);
-
-  if(z%39===0){
-    addBuilding(-15,z-10);
-    addBuilding(15,z-25);
+for(let z = -300; z < 20; z += 14){
+  addTree(-10 - Math.random() * 8, z);
+  addTree(10 + Math.random() * 8, z - 6);
+  if(z % 42 === 0){
+    addBuilding(-16, z - 10);
+    addBuilding(16, z - 25);
   }
 }
 
-// Controls
-const keys={left:false,right:false,gas:false,brake:false};
+// Game State & Controls
+const keys = { left: false, right: false, gas: false, brake: false };
 
-function bind(id,key){
-  const el=document.getElementById(id);
-  const down=e=>{
-    e.preventDefault();
-    keys[key]=true;
-    el.classList.add('active');
-    try{el.setPointerCapture(e.pointerId)}catch(_){}
-  };
-  const up=e=>{
-    e.preventDefault();
-    keys[key]=false;
-    el.classList.remove('active');
-  };
-  el.addEventListener('pointerdown',down);
-  el.addEventListener('pointerup',up);
-  el.addEventListener('pointercancel',up);
-  el.addEventListener('lostpointercapture',()=>{
-    keys[key]=false;
-    el.classList.remove('active');
-  });
+function bind(id, key){
+  const el = document.getElementById(id);
+  const down = e => { e.preventDefault(); keys[key] = true; el.classList.add('active'); try{el.setPointerCapture(e.pointerId)}catch(_){} };
+  const up = e => { e.preventDefault(); keys[key] = false; el.classList.remove('active'); };
+  el.addEventListener('pointerdown', down);
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointercancel', up);
 }
 
-bind('left','left');
-bind('right','right');
-bind('gas','gas');
-bind('brake','brake');
+bind('left', 'left');
+bind('right', 'right');
+bind('gas', 'gas');
+bind('brake', 'brake');
 
-let started=false;
-let speed=0;
-let truckX=0;
-let distanceTravelled=0;
-let completed=false;
-let firstPerson=false;
+let started = false;
+let speed = 0;
+let truckX = 0;
+let distanceTravelled = 0;
+let completed = false;
+let firstPerson = false;
 
-document.getElementById('play').addEventListener('click',()=>{
-  started=true;
-  document.getElementById('start').style.display='none';
+document.getElementById('play').addEventListener('click', () => {
+  started = true;
+  document.getElementById('start').style.display = 'none';
 });
 
-document.getElementById('cameraBtn').addEventListener('click',()=>{
-  firstPerson=!firstPerson;
-  document.getElementById('cameraBtn').textContent=
-    firstPerson?'📷 CAMERA: CABIN':'📷 CAMERA: FOLLOW';
+document.getElementById('cameraBtn').addEventListener('click', () => {
+  firstPerson = !firstPerson;
+  document.getElementById('cameraBtn').textContent = firstPerson ? '📷 CAMERA: CABIN' : '📷 CAMERA: FOLLOW';
 });
 
-const clock=new THREE.Clock();
+const clock = new THREE.Clock();
 
 function animate(){
   requestAnimationFrame(animate);
-  const dt=Math.min(clock.getDelta(),0.05);
+  const dt = Math.min(clock.getDelta(), 0.05);
 
   if(started){
-    if(keys.gas)speed+=18*dt;
-    else speed-=4*dt;
-    if(keys.brake)speed-=28*dt;
-    speed=THREE.MathUtils.clamp(speed,0,100);
+    if(keys.gas) speed += 20 * dt;
+    else speed -= 5 * dt;
+    if(keys.brake) speed -= 32 * dt;
+    speed = THREE.MathUtils.clamp(speed, 0, 110);
 
-    const steer=(keys.left?1:0)-(keys.right?1:0);
-    truckX+=steer*(1.5+speed*0.024)*dt;
-    truckX=THREE.MathUtils.clamp(truckX,-4.1,4.1);
+    const steer = (keys.left ? 1 : 0) - (keys.right ? 1 : 0);
+    truckX += steer * (1.6 + speed * 0.022) * dt;
+    truckX = THREE.MathUtils.clamp(truckX, -4.2, 4.2);
 
-    truck.position.x=truckX;
-    cabin.rotation.y=-steer*0.025;
-    trailer.rotation.y=-steer*0.012;
+    truck.position.x = truckX;
+    cabin.rotation.y = -steer * 0.03;
+    trailer.rotation.y = -steer * 0.015;
 
-    const motion=speed*0.18*dt;
-    distanceTravelled+=motion;
+    const motion = speed * 0.18 * dt;
+    distanceTravelled += motion;
 
     for(const d of dashes){
-      d.position.z+=motion;
-      if(d.position.z>12)d.position.z-=360;
+      d.position.z += motion;
+      if(d.position.z > 15) d.position.z -= 400;
     }
 
     for(const obj of scenery){
-      obj.position.z+=motion;
-      if(obj.position.z>18)obj.position.z-=275;
+      obj.position.z += motion;
+      if(obj.position.z > 20) obj.position.z -= 320;
     }
 
     for(const wheel of wheels){
-      wheel.rotation.x-=motion*1.5;
+      wheel.rotation.x -= motion * 1.6;
     }
 
     for(const wheel of frontWheels){
-      wheel.rotation.y=-steer*0.12;
+      wheel.rotation.y = -steer * 0.12;
     }
 
-    if(distanceTravelled>=2000&&!completed){
-      completed=true;
-      document.getElementById('money').textContent='₹ 500';
-      document.getElementById('distance').textContent=
-        'Delivery completed! +₹500';
+    if(distanceTravelled >= 2000 && !completed){
+      completed = true;
+      document.getElementById('money').textContent = '₹ 500';
+      document.getElementById('distance').textContent = 'Delivery completed! +₹500';
     }else if(!completed){
-      const remain=Math.max(0,2000-distanceTravelled);
-      document.getElementById('distance').textContent=
-        'Distance: '+(remain/1000).toFixed(2)+' km';
+      const remain = Math.max(0, 2000 - distanceTravelled);
+      document.getElementById('distance').textContent = 'Distance: ' + (remain / 1000).toFixed(2) + ' km';
     }
   }
 
   if(firstPerson){
-    camera.position.set(truckX,2.05,3.1);
-    camera.lookAt(truckX,1.8,-8);
+    camera.position.set(truckX, 2.1, 3.2);
+    camera.lookAt(truckX, 1.8, -10);
   }else{
-    camera.position.x+=(truckX*0.6-camera.position.x)*0.08;
-    camera.position.y+=(4.7-camera.position.y)*0.06;
-    camera.position.z+=(9-camera.position.z)*0.06;
-    camera.lookAt(truckX*0.25,1.15,-8);
+    camera.position.x += (truckX * 0.5 - camera.position.x) * 0.08;
+    camera.position.y += (4.8 - camera.position.y) * 0.06;
+    camera.position.z += (9.5 - camera.position.z) * 0.06;
+    camera.lookAt(truckX * 0.2, 1.2, -10);
   }
 
-  document.getElementById('speed').innerHTML=
-    Math.round(speed)+' <span style="font-size:12px">km/h</span>';
+  document.getElementById('speed').innerHTML = Math.round(speed) + ' <span style="font-size:12px">km/h</span>';
 
-  renderer.render(scene,camera);
+  renderer.render(scene, camera);
 }
 
-addEventListener('resize',()=>{
-  camera.aspect=innerWidth/innerHeight;
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  renderer.setSize(innerWidth, innerHeight);
 });
 
 animate();
