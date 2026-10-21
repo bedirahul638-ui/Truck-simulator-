@@ -3,33 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Indian Truck Simulator 3D</title>
+<title>Indian Truck Simulator 3D - Pro Edition</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#8fc7ec;font-family:Arial,sans-serif;touch-action:none}
+body{margin:0;overflow:hidden;background:#1a232a;font-family:'Segoe UI',Roboto,Arial,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
 #game{position:fixed;inset:0}
-#hud{position:fixed;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;color:white;pointer-events:none}
-.panel{background:#142331e8;border:1px solid #ffffff35;border-radius:13px;padding:10px 12px;text-shadow:0 2px 3px #000}
-#speed{font-size:25px;font-weight:bold}
-.small{font-size:11px;color:#d6e3ee;margin-top:4px}
-#mission{position:fixed;top:82px;left:10px;background:#142331df;color:white;border-radius:10px;padding:9px 12px;font-size:12px;line-height:1.5}
-#hint{position:fixed;bottom:112px;left:0;right:0;text-align:center;color:white;text-shadow:0 2px 4px #000;font-size:12px;pointer-events:none}
-#controls{position:fixed;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 13px;gap:8px}
-.group{display:flex;gap:8px;align-items:center}
-button{color:white;background:#142331e8;border:1px solid #ffffff60;border-radius:18px;width:62px;height:65px;font-size:23px;font-weight:bold;touch-action:none;user-select:none;-webkit-user-select:none}
-button.active,button:active{background:#247fc0}
-.pedal{width:70px;height:76px;font-size:12px}
-#gas{background:#167951e8}
-#cameraBtn{position:fixed;right:12px;top:145px;width:auto;height:43px;padding:0 13px;font-size:12px;border-radius:12px}
-#start{position:fixed;inset:0;background:#091522b9;display:flex;align-items:center;justify-content:center;padding:24px;color:white;text-align:center}
-.card{max-width:330px;background:#142331f5;border:1px solid #ffffff30;padding:24px;border-radius:20px}
-.card h1{font-size:24px}
-.card p{font-size:14px;line-height:1.5;color:#d4e1eb}
-#play{width:100%;height:52px;font-size:15px;margin-top:8px;background:#147d52}
-@media(max-height:450px){
-#controls{bottom:6px}button{height:50px;width:53px}.pedal{height:58px;width:62px}
-#hint{bottom:70px}#cameraBtn{top:105px}
-}
+#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;color:white;pointer-events:none;z-index:10}
+.panel{background:rgba(15,23,42,0.85);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:10px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+#speed{font-size:28px;font-weight:800;color:#38bdf8}
+.small{font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:2px;font-weight:600}
+#money{font-size:22px;font-weight:800;color:#4ade80}
+#mission{position:fixed;top:90px;left:12px;background:rgba(15,23,42,0.85);backdrop-filter:blur(8px);color:white;border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.4;border:1px solid rgba(255,255,255,0.1);z-index:10}
+#controls{position:fixed;bottom:20px;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 16px;gap:12px;z-index:10}
+.group{display:flex;gap:10px;align-items:center}
+button{color:white;background:rgba(15,23,42,0.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.25);border-radius:20px;width:66px;height:68px;font-size:24px;font-weight:bold;touch-action:none;box-shadow:0 6px 16px rgba(0,0,0,0.3);transition:transform 0.05s, background 0.1s}
+button:active, button.active{background:#0284c7;transform:scale(0.95);border-color:#38bdf8}
+.pedal{width:74px;height:82px;font-size:12px;font-weight:800;letter-spacing:1px}
+#gas{background:rgba(16,185,129,0.85);border-color:rgba(52,211,153,0.5)}
+#gas:active, #gas.active{background:#059669}
+#brake{background:rgba(239,68,68,0.85);border-color:rgba(248,113,113,0.5)}
+#brake:active, #brake.active{background:#dc2626}
+#topBtns{position:fixed;right:12px;top:90px;display:flex;flex-direction:column;gap:8px;z-index:10}
+.actionBtn{width:auto;height:42px;padding:0 14px;font-size:12px;border-radius:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+#hornBtn{background:rgba(234,179,8,0.85);border-color:rgba(253,224,71,0.5)}
+#hornBtn:active{background:#ca8a04}
+#start{position:fixed;inset:0;background:rgba(10,15,26,0.9);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;color:white;text-align:center;z-index:100}
+.card{max-width:350px;background:rgba(30,41,59,0.95);border:1px solid rgba(255,255,255,0.15);padding:28px 24px;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,0.6)}
+.card h1{font-size:26px;margin:12px 0 8px;font-weight:800;background:linear-gradient(to right, #38bdf8, #4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card p{font-size:13px;line-height:1.6;color:#cbd5e1;margin-bottom:16px}
+#play{width:100%;height:54px;font-size:16px;font-weight:800;border-radius:16px;margin-top:8px;background:linear-gradient(135deg, #10b981, #059669);border:none;box-shadow:0 4px 15px rgba(16,185,129,0.4)}
 </style>
 </head>
 <body>
@@ -37,18 +39,21 @@ button.active,button:active{background:#247fc0}
 
 <div id="hud">
   <div class="panel">
-    <div id="speed">0 <span style="font-size:12px">km/h</span></div>
+    <div id="speed">0 <span style="font-size:14px;color:#94a3b8">km/h</span></div>
     <div class="small">TRUCK SPEED</div>
   </div>
   <div class="panel" style="text-align:right">
-    <div id="money" style="font-size:20px;font-weight:bold">₹ 0</div>
-    <div class="small">DELIVERY REWARD</div>
+    <div id="money">₹ 0</div>
+    <div class="small">REWARD</div>
   </div>
 </div>
 
-<div id="mission">📦 Cargo delivery<br><b id="distance">Distance: 2.00 km</b></div>
-<button id="cameraBtn">📷 CAMERA: FOLLOW</button>
-<div id="hint">◀ STEER LEFT / RIGHT ▶</div>
+<div id="mission">📦 Cargo: New Delhi Highway<br><b id="distance" style="color:#38bdf8">Distance: 3.00 km</b></div>
+
+<div id="topBtns">
+  <button id="cameraBtn" class="actionBtn">📷 CAMERA</button>
+  <button id="hornBtn" class="actionBtn">🎺 HORN</button>
+</div>
 
 <div id="controls">
   <div class="group">
@@ -63,29 +68,93 @@ button.active,button:active{background:#247fc0}
 
 <div id="start">
   <div class="card">
-    <div style="font-size:48px">🚛</div>
-    <h1>Indian Truck Simulator</h1>
-    <p>Drive your upgraded cargo truck on an Indian-style highway.</p>
-    <p>Hold GAS to accelerate. Use the arrows to steer and BRAKE to slow down.</p>
+    <div style="font-size:54px">🚛</div>
+    <h1>Indian Truck Driving</h1>
+    <p>Drive your heavy cargo truck across realistic highways with traffic, sound effects, and smooth physics.</p>
     <button id="play">START DRIVING</button>
-    <div class="small">3D Truck • Realistic Edition</div>
   </div>
 </div>
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 
+// --- Web Audio Sound Generator (No external files needed) ---
+class TruckAudio {
+  constructor() {
+    this.ctx = null;
+    this.engineOsc = null;
+    this.engineGain = null;
+    this.isRunning = false;
+  }
+  
+  init() {
+    if (this.ctx) return;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AudioCtx();
+    
+    // Engine sound generator using low frequency oscillator
+    this.engineOsc = this.ctx.createOscillator();
+    const gainNode = this.ctx.createGain();
+    
+    this.engineOsc.type = 'sawtooth';
+    this.engineOsc.frequency.setValueAtTime(30, this.ctx.currentTime); // Idle frequency
+    
+    // Lowpass filter for deep diesel roar
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(160, this.ctx.currentTime);
+    
+    gainNode.gain.setValueAtTime(0.15, this.ctx.currentTime);
+    
+    this.engineOsc.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(this.ctx.destination);
+    
+    this.engineOsc.start();
+    this.engineGain = gainNode;
+    this.filter = filter;
+    this.isRunning = true;
+  }
+  
+  updateEngine(speed, isGas) {
+    if (!this.ctx || !this.isRunning) return;
+    const baseFreq = 32 + (speed * 0.8);
+    const filterFreq = 150 + (speed * 4) + (isGas ? 120 : 0);
+    this.engineOsc.frequency.setTargetAtTime(baseFreq, this.ctx.currentTime, 0.1);
+    this.filter.frequency.setTargetAtTime(filterFreq, this.ctx.currentTime, 0.1);
+  }
+  
+  playHorn() {
+    if (!this.ctx) return;
+    // Dual tone horn (Indian truck style)
+    const playTone = (freq) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.8);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.8);
+    };
+    playTone(370);
+    playTone(450);
+  }
+}
+
+const audio = new TruckAudio();
+
+// --- 3D Scene Setup ---
 const root = document.getElementById('game');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87ceeb);
-scene.fog = new THREE.FogExp2(0x87ceeb, 0.0035);
+scene.background = new THREE.Color(0x71aed2);
+scene.fog = new THREE.FogExp2(0x71aed2, 0.004);
 
-const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
+const camera = new THREE.PerspectiveCamera(58, innerWidth / innerHeight, 0.1, 500);
 
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  powerPreference: 'high-performance'
-});
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -93,46 +162,48 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 root.appendChild(renderer.domElement);
 
-// Lighting Setup for Realism
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+// Ambient & Sunlight
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
 scene.add(ambientLight);
 
-const sunlight = new THREE.DirectionalLight(0xfffaf0, 1.8);
-sunlight.position.set(30, 50, 20);
+const sunlight = new THREE.DirectionalLight(0xfff5ea, 1.8);
+sunlight.position.set(40, 60, 20);
 sunlight.castShadow = true;
 sunlight.shadow.mapSize.width = 2048;
 sunlight.shadow.mapSize.height = 2048;
-sunlight.shadow.camera.near = 0.5;
-sunlight.shadow.camera.far = 150;
-const d = 25;
+sunlight.shadow.camera.near = 1;
+sunlight.shadow.camera.far = 180;
+const d = 30;
 sunlight.shadow.camera.left = -d;
 sunlight.shadow.camera.right = d;
 sunlight.shadow.camera.top = d;
 sunlight.shadow.camera.bottom = -d;
 scene.add(sunlight);
 
-function material(color, roughness=0.7, metalness=0.1){
+// Material Helper
+function material(color, roughness = 0.6, metalness = 0.1) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness });
 }
 
-const blue = material(0x0968ac, 0.3, 0.3);
-const blueDark = material(0x053c64, 0.4, 0.2);
-const rubber = material(0x1a1a1a, 0.9, 0.1);
-const chrome = material(0xddeeff, 0.1, 0.9);
-const black = material(0x111111, 0.8, 0.2);
-const glass = material(0x112233, 0.1, 0.9);
-const white = material(0xfafafa, 0.5, 0.1);
-const amber = material(0xff9900, 0.3, 0.2);
-const red = material(0xcc1111, 0.3, 0.2);
-const darkGrey = material(0x2b333b, 0.6, 0.2);
-const cargoMat = material(0xc5d1d9, 0.5, 0.1);
-const green = material(0x4c8c44, 0.9, 0.0);
-const roadMat = material(0x22262a, 0.9, 0.1);
-const roadLine = material(0xf2ebd9, 0.8, 0.0);
-const treeTrunk = material(0x5c4033, 0.9, 0.0);
-const treeLeaves = material(0x2e6630, 0.8, 0.0);
+// Materials
+const matBlue = material(0x0c68ab, 0.25, 0.4);
+const matDarkBlue = material(0x073f69, 0.3, 0.2);
+const matRubber = material(0x1a1a1a, 0.8, 0.1);
+const matChrome = material(0xe2f1f8, 0.1, 0.9);
+const matGlass = material(0x132e3d, 0.1, 0.95);
+const matWhite = material(0xf0f0f0, 0.5, 0.1);
+const matAmber = material(0xff9800, 0.3, 0.2);
+const matRed = material(0xd32f2f, 0.3, 0.2);
+const matDarkGrey = material(0x283138, 0.6, 0.2);
+const matCargo = material(0x9ca3af, 0.5, 0.2);
+const matGreen = material(0x3e7b3e, 0.9, 0.0);
+const matRoad = material(0x222831, 0.85, 0.1);
+const matRoadLine = material(0xede6d4, 0.8, 0.0);
+const matTrunk = material(0x543d2b, 0.9, 0.0);
+const matLeaves = material(0x2d5a27, 0.8, 0.0);
+const matBuilding = material(0xd97706, 0.7, 0.1);
 
-function box(parent, w, h, d, mat, x, y, z, castShadow=true){
+function box(parent, w, h, d, mat, x, y, z, castShadow = true) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
   m.position.set(x, y, z);
   m.castShadow = castShadow;
@@ -141,7 +212,7 @@ function box(parent, w, h, d, mat, x, y, z, castShadow=true){
   return m;
 }
 
-function cylinder(parent, r1, r2, h, mat, x, y, z, segments=16){
+function cylinder(parent, r1, r2, h, mat, x, y, z, segments = 16) {
   const m = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, segments), mat);
   m.position.set(x, y, z);
   m.castShadow = true;
@@ -150,132 +221,185 @@ function cylinder(parent, r1, r2, h, mat, x, y, z, segments=16){
   return m;
 }
 
-// World Ground and Highway
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), green);
+// Environment Construction
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), matGreen);
 ground.rotation.x = -Math.PI / 2;
 ground.position.set(0, -0.1, -200);
 ground.receiveShadow = true;
 scene.add(ground);
 
-box(scene, 12, 0.15, 500, roadMat, 0, -0.02, -200, false);
+// Main Highway
+box(scene, 13, 0.15, 500, matRoad, 0, -0.02, -200, false);
 
-for(const x of [-5.6, 5.6]){
-  box(scene, 0.18, 0.03, 500, roadLine, x, 0.03, -200, false);
+// Side Yellow Lines
+for (const x of [-6.1, 6.1]) {
+  box(scene, 0.2, 0.03, 500, matRoadLine, x, 0.03, -200, false);
 }
 
+// Center Dashed White Lines
 const dashes = [];
-for(let z = -400; z < 20; z += 10){
-  dashes.push(box(scene, 0.15, 0.03, 4, roadLine, 0, 0.03, z, false));
+for (let z = -400; z < 20; z += 12) {
+  dashes.push(box(scene, 0.18, 0.03, 4.5, matRoadLine, 0, 0.03, z, false));
+}
+
+// Streetlights & Poles
+const streetlights = [];
+for (let z = -380; z < 20; z += 35) {
+  const pole = new THREE.Group();
+  pole.position.set(-6.8, 0, z);
+  cylinder(pole, 0.08, 0.12, 6, matChrome, 0, 3, 0);
+  box(pole, 1.2, 0.08, 0.08, matChrome, 0.5, 5.9, 0);
+  
+  // Light fixture
+  box(pole, 0.3, 0.1, 0.2, matWhite, 1.0, 5.85, 0);
+  scene.add(pole);
+  streetlights.push(pole);
 }
 
 // Truck Assembly
 const truck = new THREE.Group();
 scene.add(truck);
 
-box(truck, 2.1, 0.4, 6.2, darkGrey, 0, 0.75, -0.1);
-box(truck, 1.85, 0.15, 5.8, black, 0, 0.5, -0.1);
+// Chassis
+box(truck, 2.2, 0.4, 6.4, matDarkGrey, 0, 0.75, -0.1);
+box(truck, 1.9, 0.15, 6.0, matRubber, 0, 0.5, -0.1);
 
-// Rear Trailer Cargo
+// Rear Cargo Box
 const trailer = new THREE.Group();
 truck.add(trailer);
+box(trailer, 2.45, 2.2, 4.4, matCargo, 0, 1.95, -1.2);
+box(trailer, 2.5, 0.12, 4.5, matDarkGrey, 0, 0.8, -1.2);
 
-box(trailer, 2.4, 2.1, 4.2, cargoMat, 0, 1.9, -1.2);
-box(trailer, 2.45, 0.12, 4.4, darkGrey, 0, 0.8, -1.2);
-
-for(let z of [-2.7, -1.7, -0.7, 0.3]){
-  box(trailer, 2.42, 2.0, 0.04, material(0xaebbc4), 0, 1.9, z);
+for (let z of [-2.8, -1.8, -0.8, 0.2]) {
+  box(trailer, 2.47, 2.1, 0.04, material(0x78838d), 0, 1.95, z);
 }
-
-for(let y of [0.9, 2.9]){
-  box(trailer, 2.5, 0.08, 4.45, chrome, 0, y, -1.2);
+for (let y of [0.9, 3.0]) {
+  box(trailer, 2.54, 0.08, 4.55, matChrome, 0, y, -1.2);
 }
 
 // Cabin
 const cabin = new THREE.Group();
 truck.add(cabin);
 
-box(cabin, 2.15, 1.55, 1.75, blue, 0, 1.6, 1.1);
-box(cabin, 1.98, 0.45, 0.75, blue, 0, 1.0, 2.0);
-box(cabin, 2.2, 0.15, 1.8, blueDark, 0, 2.45, 1.1);
-box(cabin, 1.8, 0.75, 0.05, glass, 0, 2.0, 2.05);
+box(cabin, 2.2, 1.6, 1.8, matBlue, 0, 1.65, 1.15);
+box(cabin, 2.0, 0.45, 0.8, matBlue, 0, 1.05, 2.05);
+box(cabin, 2.25, 0.15, 1.85, matDarkBlue, 0, 2.5, 1.15);
+box(cabin, 1.85, 0.78, 0.05, matGlass, 0, 2.05, 2.1);
 
-for(const side of [-1, 1]){
-  box(cabin, 0.05, 0.6, 0.75, glass, side * 1.09, 2.0, 1.1);
-  box(cabin, 0.35, 0.1, 0.55, chrome, side * 1.05, 0.7, 1.15);
-  cylinder(cabin, 0.22, 0.22, 0.7, chrome, side * 0.85, 0.65, -0.2, 16).rotation.z = Math.PI/2;
+for (const side of [-1, 1]) {
+  box(cabin, 0.05, 0.62, 0.8, matGlass, side * 1.12, 2.05, 1.15);
+  box(cabin, 0.35, 0.1, 0.55, matChrome, side * 1.08, 0.7, 1.2);
+  cylinder(cabin, 0.22, 0.22, 0.75, matChrome, side * 0.88, 0.65, -0.2, 16).rotation.z = Math.PI / 2;
+  
+  // Side Mirrors
+  box(cabin, 0.12, 0.35, 0.18, matRubber, side * 1.35, 2.05, 1.8);
+  box(cabin, 0.03, 0.28, 0.12, matChrome, side * 1.41, 2.05, 1.8);
 }
 
-box(cabin, 1.2, 0.55, 0.08, darkGrey, 0, 1.1, 2.4);
-box(cabin, 2.25, 0.25, 0.3, chrome, 0, 0.7, 2.45);
+// Grille & Bumper
+box(cabin, 1.25, 0.6, 0.08, matDarkGrey, 0, 1.15, 2.46);
+box(cabin, 2.3, 0.28, 0.3, matChrome, 0, 0.72, 2.5);
 
-// Wheels Setup
+// Headlights
+for (const side of [-1, 1]) {
+  box(cabin, 0.3, 0.2, 0.06, matWhite, side * 0.8, 1.0, 2.52);
+  box(cabin, 0.3, 0.08, 0.06, matAmber, side * 0.8, 0.88, 2.52);
+}
+
+// Wheels
 const wheels = [];
 const frontWheels = [];
 
-function addWheel(x, z, isFront=false){
+function addWheel(x, z, isFront = false) {
   const wheel = new THREE.Group();
-  wheel.position.set(x, 0.5, z);
+  wheel.position.set(x, 0.52, z);
   truck.add(wheel);
 
-  const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 24), rubber);
+  const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.32, 24), matRubber);
   tire.rotation.z = Math.PI / 2;
   tire.castShadow = true;
   wheel.add(tire);
 
-  const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.32, 16), chrome);
+  const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.31, 0.34, 16), matChrome);
   rim.rotation.z = Math.PI / 2;
   wheel.add(rim);
 
   wheels.push(wheel);
-  if(isFront) frontWheels.push(wheel);
+  if (isFront) frontWheels.push(wheel);
 }
 
-for(const side of [-1, 1]){
-  addWheel(side * 1.15, 1.6, true);
-  addWheel(side * 1.15, -0.9, false);
-  addWheel(side * 1.15, -2.4, false);
+for (const side of [-1, 1]) {
+  addWheel(side * 1.18, 1.65, true);
+  addWheel(side * 1.18, -0.85, false);
+  addWheel(side * 1.18, -2.45, false);
 }
 
-// Scenery (Trees and Buildings)
+// --- Traffic Cars ---
+const trafficVehicles = [];
+function createTrafficCar(zPos, laneX) {
+  const car = new THREE.Group();
+  car.position.set(laneX, 0, zPos);
+  
+  const carBody = box(car, 1.8, 0.7, 3.6, material(Math.random() > 0.5 ? 0xef4444 : 0x3b82f6, 0.3, 0.5), 0, 0.6, 0);
+  box(car, 1.5, 0.6, 1.8, matGlass, 0, 1.25, -0.2);
+  
+  scene.add(car);
+  trafficVehicles.push({ mesh: car, speed: 20 + Math.random() * 20 });
+}
+
+createTrafficCar(-80, -3.2);
+createTrafficCar(-160, 3.2);
+createTrafficCar(-240, -3.2);
+
+// Scenery (Trees & Roadside Dhabas)
 const scenery = [];
 
-function addTree(x, z){
+function addTree(x, z) {
   const group = new THREE.Group();
   group.position.set(x, 0, z);
-  scene.add(group);
-  cylinder(group, 0.15, 0.22, 1.4, treeTrunk, 0, 0.7, 0, 8);
-  const leaves = new THREE.Mesh(new THREE.ConeGeometry(0.9, 2.5, 7), treeLeaves);
-  leaves.position.y = 2.4;
+  cylinder(group, 0.16, 0.24, 1.5, matTrunk, 0, 0.75, 0, 8);
+  const leaves = new THREE.Mesh(new THREE.ConeGeometry(1.0, 2.8, 7), matLeaves);
+  leaves.position.y = 2.6;
   leaves.castShadow = true;
   group.add(leaves);
+  scene.add(group);
   scenery.push(group);
 }
 
-function addBuilding(x, z){
-  const h = 3 + Math.random() * 3;
+function addDhaba(x, z) {
   const group = new THREE.Group();
   group.position.set(x, 0, z);
+  box(group, 5, 2.5, 4, matBuilding, 0, 1.25, 0);
+  box(group, 5.4, 0.2, 4.4, matDarkBlue, 0, 2.6, 0); // Roof
   scene.add(group);
-  box(group, 3.5, h, 3.5, material(0xc8b29c), 0, h/2, 0);
   scenery.push(group);
 }
 
-for(let z = -300; z < 20; z += 14){
+for (let z = -320; z < 20; z += 16) {
   addTree(-10 - Math.random() * 8, z);
-  addTree(10 + Math.random() * 8, z - 6);
-  if(z % 42 === 0){
-    addBuilding(-16, z - 10);
-    addBuilding(16, z - 25);
+  addTree(10 + Math.random() * 8, z - 8);
+  if (z % 64 === 0) {
+    addDhaba(-14, z - 12);
   }
 }
 
-// Game State & Controls
+// Controls State
 const keys = { left: false, right: false, gas: false, brake: false };
 
-function bind(id, key){
+function bind(id, key) {
   const el = document.getElementById(id);
-  const down = e => { e.preventDefault(); keys[key] = true; el.classList.add('active'); try{el.setPointerCapture(e.pointerId)}catch(_){} };
-  const up = e => { e.preventDefault(); keys[key] = false; el.classList.remove('active'); };
+  const down = e => {
+    e.preventDefault();
+    audio.init(); // Initialize audio context on user interaction
+    keys[key] = true;
+    el.classList.add('active');
+    try { el.setPointerCapture(e.pointerId); } catch (_) {}
+  };
+  const up = e => {
+    e.preventDefault();
+    keys[key] = false;
+    el.classList.remove('active');
+  };
   el.addEventListener('pointerdown', down);
   el.addEventListener('pointerup', up);
   el.addEventListener('pointercancel', up);
@@ -294,77 +418,105 @@ let completed = false;
 let firstPerson = false;
 
 document.getElementById('play').addEventListener('click', () => {
+  audio.init();
   started = true;
   document.getElementById('start').style.display = 'none';
 });
 
 document.getElementById('cameraBtn').addEventListener('click', () => {
   firstPerson = !firstPerson;
-  document.getElementById('cameraBtn').textContent = firstPerson ? '📷 CAMERA: CABIN' : '📷 CAMERA: FOLLOW';
+  document.getElementById('cameraBtn').textContent = firstPerson ? '📷 CABIN' : '📷 FOLLOW';
+});
+
+document.getElementById('hornBtn').addEventListener('click', () => {
+  audio.init();
+  audio.playHorn();
 });
 
 const clock = new THREE.Clock();
 
-function animate(){
+function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(clock.getDelta(), 0.05);
 
-  if(started){
-    if(keys.gas) speed += 20 * dt;
-    else speed -= 5 * dt;
-    if(keys.brake) speed -= 32 * dt;
-    speed = THREE.MathUtils.clamp(speed, 0, 110);
+  if (started) {
+    // Smooth Acceleration Physics
+    if (keys.gas) speed += 22 * dt;
+    else speed -= 6 * dt;
+    if (keys.brake) speed -= 36 * dt;
+    speed = THREE.MathUtils.clamp(speed, 0, 115);
 
+    // Audio Engine Update
+    audio.updateEngine(speed, keys.gas);
+
+    // Steering Physics
     const steer = (keys.left ? 1 : 0) - (keys.right ? 1 : 0);
-    truckX += steer * (1.6 + speed * 0.022) * dt;
-    truckX = THREE.MathUtils.clamp(truckX, -4.2, 4.2);
+    truckX += steer * (1.8 + speed * 0.02) * dt;
+    truckX = THREE.MathUtils.clamp(truckX, -4.5, 4.5);
 
     truck.position.x = truckX;
-    cabin.rotation.y = -steer * 0.03;
-    trailer.rotation.y = -steer * 0.015;
+    cabin.rotation.y = -steer * 0.035;
+    trailer.rotation.y = -steer * 0.018;
 
     const motion = speed * 0.18 * dt;
     distanceTravelled += motion;
 
-    for(const d of dashes){
+    // Environment Movement Loop
+    for (const d of dashes) {
       d.position.z += motion;
-      if(d.position.z > 15) d.position.z -= 400;
+      if (d.position.z > 15) d.position.z -= 420;
     }
 
-    for(const obj of scenery){
+    for (const pole of streetlights) {
+      pole.position.z += motion;
+      if (pole.position.z > 20) pole.position.z -= 400;
+    }
+
+    for (const obj of scenery) {
       obj.position.z += motion;
-      if(obj.position.z > 20) obj.position.z -= 320;
+      if (obj.position.z > 25) obj.position.z -= 340;
     }
 
-    for(const wheel of wheels){
-      wheel.rotation.x -= motion * 1.6;
+    // Traffic Cars Movement
+    for (const carObj of trafficVehicles) {
+      carObj.mesh.position.z += motion - (carObj.speed * 0.1 * dt);
+      if (carObj.mesh.position.z > 20) {
+        carObj.mesh.position.z -= 300;
+        carObj.mesh.position.x = Math.random() > 0.5 ? -3.2 : 3.2;
+      }
     }
 
-    for(const wheel of frontWheels){
-      wheel.rotation.y = -steer * 0.12;
+    // Wheels Rotation
+    for (const wheel of wheels) {
+      wheel.rotation.x -= motion * 1.5;
+    }
+    for (const wheel of frontWheels) {
+      wheel.rotation.y = -steer * 0.15;
     }
 
-    if(distanceTravelled >= 2000 && !completed){
+    // Distance & Mission Logic
+    if (distanceTravelled >= 3000 && !completed) {
       completed = true;
-      document.getElementById('money').textContent = '₹ 500';
-      document.getElementById('distance').textContent = 'Delivery completed! +₹500';
-    }else if(!completed){
-      const remain = Math.max(0, 2000 - distanceTravelled);
+      document.getElementById('money').textContent = '₹ 1,000';
+      document.getElementById('distance').textContent = 'Delivery Complete! +₹1000';
+    } else if (!completed) {
+      const remain = Math.max(0, 3000 - distanceTravelled);
       document.getElementById('distance').textContent = 'Distance: ' + (remain / 1000).toFixed(2) + ' km';
     }
   }
 
-  if(firstPerson){
-    camera.position.set(truckX, 2.1, 3.2);
-    camera.lookAt(truckX, 1.8, -10);
-  }else{
-    camera.position.x += (truckX * 0.5 - camera.position.x) * 0.08;
+  // Smooth Camera Controller
+  if (firstPerson) {
+    camera.position.set(truckX, 2.15, 3.1);
+    camera.lookAt(truckX, 1.85, -12);
+  } else {
+    camera.position.x += (truckX * 0.55 - camera.position.x) * 0.08;
     camera.position.y += (4.8 - camera.position.y) * 0.06;
-    camera.position.z += (9.5 - camera.position.z) * 0.06;
-    camera.lookAt(truckX * 0.2, 1.2, -10);
+    camera.position.z += (9.8 - camera.position.z) * 0.06;
+    camera.lookAt(truckX * 0.2, 1.25, -10);
   }
 
-  document.getElementById('speed').innerHTML = Math.round(speed) + ' <span style="font-size:12px">km/h</span>';
+  document.getElementById('speed').innerHTML = Math.round(speed) + ' <span style="font-size:14px;color:#94a3b8">km/h</span>';
 
   renderer.render(scene, camera);
 }
